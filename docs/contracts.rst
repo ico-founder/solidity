@@ -754,7 +754,7 @@ arguments to be stored in the transaction's log - a special data structure
 in the blockchain. These logs are associated with the address of the contract,
 are incorporated into the blockchain, and stay there as long as a block is
 accessible (forever as of the Frontier and Homestead releases, but this might
-change with Serenity). Log and event data is not accessible from within
+change with Serenity). The Log and its event data is not accessible from within
 contracts (not even from the contract that created them).
 
 It is possible to request a simple payment verification (SPV) for logs, so if
@@ -765,10 +765,13 @@ that the log actually exists inside the blockchain.
   You have to supply block headers because the contract can only see the last
   256 block hashes.
 
-Up to three parameters can receive the attribute ``indexed`` which stores the
-respective arguments in a special data structure known as :ref:`"topics" <events_topics>`. If you use arrays (including ``string`` and ``bytes``) as
-indexed arguments, its Keccak-256 hash is stored as a topic instead, this is
-because a topic can only hold a single word (32 bytes).
+You can add the attribute ``indexed`` to up to three parameters which instead adds them 
+to a special data structure known as :ref:`"topics" <events_topics>`. If you use 
+arrays (including ``string`` and ``bytes``) as indexed arguments, its Keccak-256 
+hash is stored as a topic instead, this is because a topic can only hold a single word (32 bytes).
+
+All parameters without the ``indexed`` attribute are :ref:`ABI-encoded <ABI>` into the data part of
+the log.
 
 Topics allow you to search for events, for example when filtering a sequence of
 blocks for certain events. You can also filter events by the address of the
@@ -777,9 +780,6 @@ contract that emitted the event.
 The hash of the signature of the event is one of the topics, except if you
 declared the event with the ``anonymous`` specifier. This means that it is
 not possible to filter for specific anonymous events by name.
-
-All non-indexed arguments are :ref:`ABI-encoded <ABI>` into the data part of
-the log.
 
 ::
 
