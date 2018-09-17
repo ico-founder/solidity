@@ -6,15 +6,20 @@ Solidity
     :alt: Solidity logo
     :align: center
 
-Solidity is a contract-oriented, high-level language for implementing smart contracts.
-It was influenced by C++, Python and JavaScript
-and is designed to target the Ethereum Virtual Machine (EVM).
+Solidity is a contract-oriented, high-level language for implementing smart
+contracts. Smart contracts are programs which govern the behaviour of accounts
+within the Ethereum state. These accounts are able to pass messages between
+themselves using the contracts as well as practically Turing complete
+computation.
+
+Solidity was influenced by C++, Python and JavaScript and is designed to target
+the Ethereum Virtual Machine (EVM).
 
 Solidity is statically typed, supports inheritance, libraries and complex
 user-defined types among other features.
 
-As you will see, it is possible to create contracts for voting,
-crowdfunding, blind auctions, multi-signature wallets and more.
+Solidity helps you create contracts for voting, crowdfunding, blind auctions,
+multi-signature wallets and more.
 
 .. note::
     The best way to try out Solidity right now is using
