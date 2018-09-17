@@ -765,13 +765,13 @@ that the log actually exists inside the blockchain.
   You have to supply block headers because the contract can only see the last
   256 block hashes.
 
-You can add the attribute ``indexed`` to up to three parameters which instead adds them 
-to a special data structure known as :ref:`"topics" <events_topics>`. If you use 
-arrays (including ``string`` and ``bytes``) as indexed arguments, its Keccak-256 
+You can add the attribute ``indexed`` to up to three parameters which instead adds them
+to a special data structure known as :ref:`"topics" <events_topics>`. If you use
+arrays (including ``string`` and ``bytes``) as indexed arguments, its Keccak-256
 hash is stored as a topic instead, this is because a topic can only hold a single word (32 bytes).
 
-All parameters without the ``indexed`` attribute are :ref:`ABI-encoded <ABI>` into the data part of
-the log.
+All parameters without the ``indexed`` attribute are :ref:`ABI-encoded <ABI>`
+into the data part of the log.
 
 Topics allow you to search for events, for example when filtering a sequence of
 blocks for certain events. You can also filter events by the address of the
@@ -802,7 +802,7 @@ not possible to filter for specific anonymous events by name.
         }
     }
 
-The use in the JavaScript API is as follows:
+Then use in the JavaScript API is as follows:
 
 ::
 
@@ -814,18 +814,35 @@ The use in the JavaScript API is as follows:
 
     // watch for changes
     event.watch(function(error, result){
-        // result will contain various information
-        // including the arguments given to the `Deposit`
-        // call.
+        // result contains non-indexed arguments and topics
+        // given to the `Deposit` call.
         if (!error)
             console.log(result);
     });
+
 
     // Or pass a callback to start watching immediately
     var event = clientReceipt.Deposit(function(error, result) {
         if (!error)
             console.log(result);
     });
+
+The output of the above looks like the following (trimmed):
+
+.. code-block:: json
+
+  {
+     returnValues: {
+         _from: 0x1111…FFFFCCCC,
+         _id: 0x50…sd5adb20,
+         _value: 0x420042
+     },
+     raw: {
+         data: '0x7f…91385',
+         topics: ['0xfd4…b4ead7', '0x7f…1a91385']
+     },
+     …
+  }
 
 .. index:: ! log
 
