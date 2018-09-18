@@ -96,6 +96,16 @@ In Solidity, division rounds towards zero. This mean that ``int256(-5) / int256(
 Note that in contrast, division on :ref:`literals<rational_literals>` results in fractional values
 of arbitrary precision.
 
+The modulus operator ``%`` yields the remainder from the division of the left operand by the right operand.
+Modulus results in the same sign as its left operand (or zero), regardless of the sign of the right operand:
+
+ * ``int256(5) % int256(2) == int256(1)``
+ * ``int256(5) % int256(-2) == int256(1)``
+ * ``int256(-5) % int256(2) == int256(-1)``
+ * ``int256(-5) % int256(-2) == int256(-1)``
+
+This means that ``int256(-5) % int256(2) == -(int256(5) % int256(2))`` also holds.
+
 Division by zero and modulus with zero throws a runtime exception.
 
 Exponentiation
