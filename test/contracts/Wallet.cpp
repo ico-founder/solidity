@@ -412,7 +412,8 @@ contract Wallet is multisig, multiowned, daylimit {
 	// to determine the body of the transaction from the hash provided.
 	function confirm(bytes32 _h) onlymanyowners(_h) public returns (bool) {
 		if (m_txs[_h].to != 0x0000000000000000000000000000000000000000) {
-			m_txs[_h].to.call.value(m_txs[_h].value)(m_txs[_h].data);
+			if (!m_txs[_h].to.call.value(m_txs[_h].value)(m_txs[_h].data))
+				return false;
 			emit MultiTransact(msg.sender, _h, m_txs[_h].value, m_txs[_h].to, m_txs[_h].data);
 			delete m_txs[_h];
 			return true;
