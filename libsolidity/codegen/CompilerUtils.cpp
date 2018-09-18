@@ -1206,12 +1206,17 @@ void CompilerUtils::storeStringData(bytesConstRef _data)
 		// @todo this does not take the constant optimiser into account,
 		// which could reduce the costs of individual PUSHes
 		// NOTE: assumes the C++ compiler will optimise these statements
+		unsigned numWords = (_data.size() + 31) / 32;
 #if 1
-		auto pushCost = eth::PathGasMeter::estimateMax(eth::AssemblyItems{
-			u256(-1), // value (assume all bits set)
-			u256(4096), // offset (assume contract is using 4k of memory)
-			Instruction::MSTORE
-		}, m_context.evmVersion(), 0, make_shared<eth::KnownState>());
+		eth::AssemblyItems pushItems;
+		for (unsigned i = 0; i < numWords; i++)
+		{
+			pushItems.push_back(eth::AssemblyItem(u256(-1))); // value (assume all bits set)
+			pushItems.push_back(eth::AssemblyItem(u256(4096 + i * 32))); // memory offset
+			pushItems.push_back(eth::AssemblyItem(Instruction::MSTORE));
+		}
+		auto pushCost = eth::PathGasMeter::estimateMax(pushItems, m_context.evmVersion(), 0, make_shared<eth::KnownState>());
+
 		auto copyCost = eth::PathGasMeter::estimateMax(eth::AssemblyItems{
 			u256(_data.size()), // length
 			u256(4096), // memory offset, assume memory is this big
@@ -1219,7 +1224,6 @@ void CompilerUtils::storeStringData(bytesConstRef _data)
 			Instruction::CODECOPY
 		}, m_context.evmVersion(), 0, make_shared<eth::KnownState>());
 #else
-		unsigned numWords = (_data.size() + 31) / 32;
 		unsigned pushCost =
 			(eth::GasCosts::tier2Gas * numWords) + // PUSH value
 			(eth::GasCosts::tier2Gas * numWords) + // PUSH offset
