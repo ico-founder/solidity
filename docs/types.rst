@@ -107,7 +107,8 @@ This means that modulo results in the same sign as its left operand (or zero):
  * ``int256(-5) % int256(2) == int256(-1)``
  * ``int256(-5) % int256(-2) == int256(-1)``
 
-Division by zero and modulo with zero throws a runtime exception.
+.. note::
+  Division by zero and modulo with zero throws a runtime exception.
 
 Exponentiation
 ^^^^^^^^^^^^^^
