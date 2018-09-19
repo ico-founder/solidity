@@ -759,13 +759,10 @@ contracts (not even from the contract that created them).
 
 It is possible to request a simple payment verification (SPV) for logs, so if
 an external entity supplies a contract with such a verification, it can check
-that the log actually exists inside the blockchain.
+that the log actually exists inside the blockchain. You have to supply block headers
+because the contract can only see the last 256 block hashes.
 
-.. note::
-  You have to supply block headers because the contract can only see the last
-  256 block hashes.
-
-You can add the attribute ``indexed`` to up to three parameters which instead adds them
+You can add the attribute ``indexed`` to up to three parameters which adds them
 to a special data structure known as :ref:`"topics" <events_topics>`. If you use
 arrays (including ``string`` and ``bytes``) as indexed arguments, its Keccak-256
 hash is stored as a topic instead, this is because a topic can only hold a single word (32 bytes).
@@ -802,7 +799,7 @@ not possible to filter for specific anonymous events by name.
         }
     }
 
-Then use in the JavaScript API is as follows:
+The use in the JavaScript API is as follows:
 
 ::
 
