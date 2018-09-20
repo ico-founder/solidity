@@ -680,14 +680,14 @@ non-persistent area where function arguments are stored, and behaves mostly like
     depending on the kind of variable, function type, etc., but all complex types must now give an explicit
     data location.
 
-Data locations are important because they change how assignments behave:
-assignments between storage and memory and also to a state variable (even from other state variables)
-always create an independent copy.
-Assignments to local storage variables only assign a reference though, and
-this reference always points to the state variable even if the latter is changed
-in the meantime.
-On the other hand, assignments from a memory stored reference type to another
-memory-stored reference type do not create a copy.
+Data locations are not only relevant for persistency of data, but also for the semantics of assignments:
+assignments between storage and memory (or from calldata) always create an independent copy.
+Assignments from memory to memory only create references. This means that changes to one memory variable
+will also be visible in all other memory variables that refer to the same data.
+Assignments from storage to a local storage variables also only assign a reference.
+In contrast, all other assignments to storage will always copy. Examples for this case
+are assignments to state variables or to members of local variables of storage struct type, even
+if the local variable itself is just a reference.
 
 ::
 
@@ -717,13 +717,6 @@ memory-stored reference type do not create a copy.
         function h(uint[] memory) public pure {}
     }
 
-Summary
-^^^^^^^
-
-Forced data location:
- - parameters (not return) of external functions: calldata
- - state variables: storage
-
 .. index:: ! array
 
 .. _arrays:
@@ -732,9 +725,10 @@ Arrays
 ------
 
 Arrays can have a compile-time fixed size or they can be dynamic.
-For storage arrays, the element type can be arbitrary (i.e. also other
-arrays, mappings or structs). For memory arrays, it cannot be a mapping and
-has to be an ABI type if it is an argument of a publicly-visible function.
+The are very few restrictions for the element, it can also be
+another array, a mapping or a struct. The general restrictions for
+types apply, though, in that mappings can only be used in storage
+and publicly-visible functions need parameters that are ABI types.
 
 An array of fixed size ``k`` and element type ``T`` is written as ``T[k]``,
 an array of dynamic size as ``T[]``. As an example, an array of 5 dynamic
@@ -744,9 +738,13 @@ third dynamic array, you use ``x[2][1]`` (indices are zero-based and
 access works in the opposite way of the declaration, i.e. ``x[2]``
 shaves off one level in the type from the right).
 
+Accessing an array past its end will cause a revert. If you want to add
+new elements, you have to use ``.push()`` or increase the ``.length``
+member (see below).
+
 Variables of type ``bytes`` and ``string`` are special arrays. A ``bytes`` is similar to ``byte[]``,
-but it is packed tightly in calldata. ``string`` is equal to ``bytes`` but does not allow
-length or index access (for now).
+but it is packed tightly in calldata and memory. ``string`` is equal to ``bytes`` but does not allow
+length or index access.
 So ``bytes`` should always be preferred over ``byte[]`` because it is cheaper.
 As a rule of thumb, use ``bytes`` for arbitrary-length raw byte data and ``string``
 for arbitrary-length string (UTF-8) data. If you can limit the length to a certain
@@ -766,7 +764,7 @@ The numeric index will become a required parameter for the getter.
 Allocating Memory Arrays
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Creating arrays with variable length in memory can be done using the ``new`` keyword.
+Creating arrays with a runtime-dependent length in memory can be done using the ``new`` keyword.
 As opposed to storage arrays, it is **not** possible to resize memory arrays (e.g. by assigning to
 the ``.length`` member). You either have to calculate the required size in advance
 or create a new memory array and copy every element.
@@ -809,7 +807,7 @@ assigned to a variable right away.
 The type of an array literal is a memory array of fixed size whose base
 type is the common type of the given elements. The type of ``[1, 2, 3]`` is
 ``uint8[3] memory``, because the type of each of these constants is ``uint8``.
-Because of that, it was necessary to convert the first element in the example
+Because of that, it is necessary to convert the first element in the example
 above to ``uint``. Note that currently, fixed size memory arrays cannot
 be assigned to dynamically-sized memory arrays, i.e. the following is not
 possible:
@@ -836,15 +834,30 @@ Members
 ^^^^^^^
 
 **length**:
-    Arrays have a ``length`` member to read their number of elements.
-    Dynamically-sized arrays (only available for storage) have a read-write ``length`` member to resize the array. Increasing the length adds uninitialized elements to the array, this has *O(1)* complexity. Reducing the length performs :ref:``delete`` on each removed element and has *O(n)* complexity where *n* is the number of elements being deleted. Please note that calling ``length--`` on an empty array will set the length of the array to 2^256-1 due to ``uint256`` underflow wrapping.
+    Arrays have a ``length`` member that contains their number of elements.
+    The length of memory arrays is fixed (but dynamic, i.e. it can depend on runtime parameters) once they are created.
+    For dynamically-sized arrays (only available for storage), this member can be assigned to resize the array.
+    Accessing elements outside the current length will not automatically resize the array and instead cause a failing assertion.
+    Increasing the length adds new zero-initialized elements to the array.
+    Reducing the length performs an implicit :ref:``delete`` on each of the removed elements.
 **push**:
-     Dynamic storage arrays and ``bytes`` (not ``string``) have a member function called ``push`` that can be used to append an element at the end of the array. The function returns the new length.
+     Dynamic storage arrays and ``bytes`` (not ``string``) have a member function called ``push`` that can be used to append an element at the end of the array. The element will be zero-initialized. The function returns the new length.
 **pop**:
      Dynamic storage arrays and ``bytes`` (not ``string``) have a member function called ``pop`` that can be used to remove an element from the end of the array. This will also implicitly call :ref:``delete`` on the removed element.
 
 .. warning::
-    It is not yet possible to use arrays of arrays in external functions.
+    If you use ``.length--`` on an empty array, it will cause an underflow and
+    thus sets the length to ``2**256-1``.
+
+.. note::
+    Increasing the length of a storage array has constant gas costs because
+    storage is assumed to be zero-initialized, while decreasing
+    the length has at least linear cost, because it includes explicitly clearing the removed
+    elements similar to calling :ref:``delete`` on them.
+
+.. note::
+    It is not yet possible to use arrays of arrays in external functions
+    (but they are supported in public functions).
 
 .. note::
     In EVM versions before Byzantium, it was not possible to access
@@ -862,13 +875,32 @@ Members
         // dynamic array of pairs (i.e. of fixed size arrays of length two).
         // Because of that, T[] is always a dynamic array of T, even if T
         // itself is an array.
+        // Data location for all state variables is storage.
         bool[2][] m_pairsOfFlags;
 
         // newPairs is stored in memory - the only possibility
-        // for public function arguments
+        // for public contract function arguments
         function setAllFlagPairs(bool[2][] memory newPairs) public {
-            // assignment to a storage array replaces the complete array
+            // assignment to a storage array performs a copy of ``newPairs`` and
+            // replaces the complete array ``m_pairsOfFlags``.
             m_pairsOfFlags = newPairs;
+        }
+
+        struct StructType {
+            uint[] contents;
+            uint moreInfo;
+        }
+        StructType s;
+
+        function f(uint[] memory c) public {
+            // stores a reference to ``s`` in ``g``
+            StructType storage g = s;
+            // also changes ``s.moreInfo``.
+            g.moreInfo = 2;
+            // assigns a copy because ``g.contents``
+            // is not a local variable, but a member of
+            // a local variable.
+            g.contents = c;
         }
 
         function setFlagPair(uint index, bool flagA, bool flagB) public {
@@ -956,7 +988,10 @@ shown in the following example:
 
         function newCampaign(address payable beneficiary, uint goal) public returns (uint campaignID) {
             campaignID = numCampaigns++; // campaignID is return variable
-            // Creates new struct and saves in storage. We leave out the mapping type.
+            // Creates new struct in memory and copies it to storage.
+            // We leave out the mapping type, because it is not valid in memory.
+            // If structs are copied (even from storage to storage), mapping types
+            // are always omitted, because they cannot be enumerated.
             campaigns[campaignID] = Campaign(beneficiary, goal, 0, 0);
         }
 
@@ -986,11 +1021,12 @@ Struct types can be used inside mappings and arrays and they can itself
 contain mappings and arrays.
 
 It is not possible for a struct to contain a member of its own type,
-although the struct itself can be the value type of a mapping member.
+although the struct itself can be the value type of a mapping member
+or it can contain a dynamically-sized array of its type.
 This restriction is necessary, as the size of the struct has to be finite.
 
 Note how in all the functions, a struct type is assigned to a local variable
-(of the default storage data location).
+with data location storage.
 This does not copy the struct but only stores a reference so that assignments to
 members of the local variable actually write to the state.
 
@@ -1001,7 +1037,7 @@ assigning it to a local variable, as in
 .. index:: !mapping
 
 Mappings
-========
+--------
 
 You declare mapping types with the syntax ``mapping(_KeyType => _ValueType)``.
 The ``_KeyType`` can be any elementary type. This means it can be any of
@@ -1018,8 +1054,11 @@ mapping, only its ``keccak256`` hash is used to look up the value.
 Because of this, mappings do not have a length or a concept of a key or
 value being set.
 
-Mappings are **only** allowed for state variables (or as storage reference types
-in internal functions).
+Mappings can only have a data location of "storage" and thus
+are allowed for state variables, as storage reference types
+in functions, or as parameters for library functions.
+They cannot be used as parameters or return parameters
+of contract functions that are publicly visible.
 
 You can mark variables of mapping type as ``public`` and Solidity creates a
 :ref:`getter <visibility-and-getters>` for you. The ``_KeyType`` becomes a
