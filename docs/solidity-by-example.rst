@@ -681,7 +681,6 @@ In this tutorial, we will sign messages in the browser using `web3.js <https://g
 as it provides a number of other security benefits.
 
 ::
-
     /// Hashing first makes things easier
     var hash = web3.utils.sha3("message to sign");
     web3.eth.personal.sign(hash, web3.eth.defaultAccount, function () {
@@ -1042,16 +1041,16 @@ and we use JavaScript. The following code borrows the `constructMessage` functio
 
     // this mimics the prefixing behavior of the eth_sign JSON-RPC method.
     function prefixed(hash) {
-        return abi.soliditySHA3(
+        return ethereumjs.ABI.soliditySHA3(
             ["string", "bytes32"],
             ["\x19Ethereum Signed Message:\n32", hash]
         );
     }
 
     function recoverSigner(message, signature) {
-        var split = ethereumjsutil.fromRpcSig(signature);
-        var publicKey = ethereumjsutil.ecrecover(message, split.v, split.r, split.s);
-        var signer = ethereumjsutil.pubToAddress(publicKey).toString("hex");
+        var split = ethereumjs.Util.fromRpcSig(signature);
+        var publicKey = ethereumjs.Util.ecrecover(message, split.v, split.r, split.s);
+        var signer = ethereumjs.Util.pubToAddress(publicKey).toString("hex");
         return signer;
     }
 
