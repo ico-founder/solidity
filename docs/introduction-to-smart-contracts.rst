@@ -39,7 +39,7 @@ So-called pragmas are common instructions for compilers about how to treat the
 source code (e.g. `pragma once <https://en.wikipedia.org/wiki/Pragma_once>`_).
 
 A contract in the sense of Solidity is a collection of code (its *functions*) and
-data (its *state*) that resides at a specific unique address on the Ethereum
+data (its *state*) that resides at a specific address on the Ethereum
 blockchain. The line ``uint storedData;`` declares a state variable called ``storedData`` of
 type ``uint`` (*u*nsigned *int*eger of *256* bits). You can think of it as a single slot
 in a database that can be queried and altered by calling functions of the
