@@ -157,7 +157,7 @@ After this process, we know which expressions have to be on the stack at the end
 
 As the last step, the code in each block is re-generated. The optimiser creates a dependency graph from the expressions on the stack at the end of the block, and it drops every operation that is not part of this graph. It generates code that applies the modifications to memory and storage in the order they were made in the original code (dropping modifications which were found not to be needed). Finally, it generates all values that are required to be on the stack in the correct place.
 
-These steps are applied to each basic block and the newly generated code is used as replacement if it is smaller. If a basic block is split at a ``JUMPI`` and during the analysis, the condition evaluates to a constant, the ``JUMPI`` is replaced depending on the value of the constant, and thus code like the below:
+These steps are applied to each basic block and the newly generated code is used as replacement if it is smaller. If a basic block is split at a ``JUMPI`` and during the analysis, the condition evaluates to a constant, the ``JUMPI`` is replaced depending on the value of the constant. Thus code like:
 
 ::
 
@@ -168,7 +168,7 @@ These steps are applied to each basic block and the newly generated code is used
     else
       return 1;
 
-Still simplifies to code which you can compile even though the instructions contained 
+still simplifies to code which you can compile even though the instructions contained 
 a jump in the beginning of the process:
 
 ::
