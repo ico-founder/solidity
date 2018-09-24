@@ -42,7 +42,7 @@ This means that cyclic creation dependencies are impossible.
 
 ::
 
-    pragma solidity ^0.4.22;
+    pragma solidity >=0.4.22 <0.6.0;
 
     contract OwnedToken {
         // TokenCreator is a contract type that is defined below.
@@ -173,7 +173,7 @@ return parameter list for functions.
 
 ::
 
-    pragma solidity ^0.4.16;
+    pragma solidity >=0.4.16 <0.6.0;
 
     contract C {
         function f(uint a) private pure returns (uint b) { return a + 1; }
@@ -187,7 +187,7 @@ In the following example, ``D``, can call ``c.getData()`` to retrieve the value 
 
 ::
 
-    pragma solidity ^0.4.0;
+    pragma solidity >=0.4.0 <0.6.0;
 
     contract C {
         uint private data;
@@ -231,7 +231,7 @@ when they are declared.
 
 ::
 
-    pragma solidity ^0.4.0;
+    pragma solidity >=0.4.0 <0.6.0;
 
     contract C {
         uint public data = 42;
@@ -251,7 +251,7 @@ it is evaluated as a state variable.  If it is accessed externally
 
 ::
 
-    pragma solidity ^0.4.0;
+    pragma solidity >=0.4.0 <0.6.0;
 
     contract C {
         uint public data;
@@ -270,7 +270,8 @@ to write a function, for example:
 
 ::
 
-  pragma solidity ^0.4.0;
+  pragma solidity >=0.4.0 <0.6.0;
+
   contract arrayExample {
     // public state variable
     uint[] public myArray;
@@ -295,7 +296,7 @@ The next example is more complex:
 
 ::
 
-    pragma solidity ^0.4.0;
+    pragma solidity >=0.4.0 <0.6.0;
 
     contract Complex {
         struct Data {
@@ -456,7 +457,7 @@ value types and strings.
 
 ::
 
-    pragma solidity ^0.4.0;
+    pragma solidity >=0.4.0 <0.6.0;
 
     contract C {
         uint constant x = 32**22 + 8;
@@ -676,7 +677,7 @@ The following example shows overloading of the function
 
 ::
 
-    pragma solidity ^0.4.16;
+    pragma solidity >=0.4.16 <0.6.0;
 
     contract A {
         function f(uint _in) public pure returns (uint out) {
@@ -694,7 +695,7 @@ externally visible functions differ by their Solidity types but not by their ext
 
 ::
 
-    pragma solidity ^0.4.16;
+    pragma solidity >=0.4.16 <0.6.0;
 
     // This will not compile
     contract A {
@@ -727,7 +728,7 @@ candidate, resolution fails.
 
 ::
 
-    pragma solidity ^0.4.16;
+    pragma solidity >=0.4.16 <0.6.0;
 
     contract A {
         function f(uint8 _in) public pure returns (uint8 out) {
@@ -787,7 +788,7 @@ All non-indexed arguments will be :ref:`ABI-encoded <ABI>` into the data part of
 
 ::
 
-    pragma solidity ^0.4.21;
+    pragma solidity >=0.4.21 <0.6.0;
 
     contract ClientReceipt {
         event Deposit(
@@ -844,7 +845,7 @@ as topics. The event call above can be performed in the same way as
 
 ::
 
-    pragma solidity ^0.4.10;
+    pragma solidity >=0.4.10 <0.6.0;
 
     contract C {
         function f() public payable {
@@ -964,7 +965,7 @@ Note that above, we call ``mortal.kill()`` to "forward" the
 destruction request. The way this is done is problematic, as
 seen in the following example::
 
-    pragma solidity ^0.4.22;
+    pragma solidity >=0.4.22 <0.6.0;
 
     contract owned {
         constructor() public { owner = msg.sender; }
@@ -993,7 +994,7 @@ derived override, but this function will bypass
 ``Base1.kill``, basically because it does not even know about
 ``Base1``.  The way around this is to use ``super``::
 
-    pragma solidity ^0.4.22;
+    pragma solidity >=0.4.22 <0.6.0;
 
     contract owned {
         constructor() public { owner = msg.sender; }
@@ -1083,7 +1084,7 @@ The constructors of all the base contracts will be called following the
 linearization rules explained below. If the base constructors have arguments,
 derived contracts need to specify all of them. This can be done in two ways::
 
-    pragma solidity ^0.4.22;
+    pragma solidity >=0.4.22 <0.6.0;
 
     contract Base {
         uint x;
@@ -1142,7 +1143,7 @@ error "Linearization of inheritance graph impossible".
 
 ::
 
-    pragma solidity ^0.4.0;
+    pragma solidity >=0.4.0 <0.6.0;
 
     contract X {}
     contract A is X {}
@@ -1173,7 +1174,7 @@ Abstract Contracts
 
 Contracts are marked as abstract when at least one of their functions lacks an implementation as in the following example (note that the function declaration header is terminated by ``;``)::
 
-    pragma solidity ^0.4.0;
+    pragma solidity >=0.4.0 <0.6.0;
 
     contract Feline {
         function utterance() public returns (bytes32);
@@ -1181,7 +1182,7 @@ Contracts are marked as abstract when at least one of their functions lacks an i
 
 Such contracts cannot be compiled (even if they contain implemented functions alongside non-implemented functions), but they can be used as base contracts::
 
-    pragma solidity ^0.4.0;
+    pragma solidity >=0.4.0 <0.6.0;
 
     contract Feline {
         function utterance() public returns (bytes32);
@@ -1233,7 +1234,7 @@ Interfaces are denoted by their own keyword:
 
 ::
 
-    pragma solidity ^0.4.11;
+    pragma solidity >=0.4.11 <0.6.0;
 
     interface Token {
         function transfer(address recipient, uint amount) external;
@@ -1283,7 +1284,7 @@ more advanced example to implement a set).
 
 ::
 
-    pragma solidity ^0.4.22;
+    pragma solidity >=0.4.22 <0.6.0;
 
     library Set {
       // We define a new struct datatype that will be used to
@@ -1357,7 +1358,7 @@ custom types without the overhead of external function calls:
 
 ::
 
-    pragma solidity ^0.4.16;
+    pragma solidity >=0.4.16 <0.6.0;
 
     library BigInt {
         struct bigint {
@@ -1488,7 +1489,7 @@ available without having to add further code.
 Let us rewrite the set example from the
 :ref:`libraries` in this way::
 
-    pragma solidity ^0.4.16;
+    pragma solidity >=0.4.16 <0.6.0;
 
     // This is the same code as before, just without comments
     library Set {
@@ -1538,7 +1539,7 @@ Let us rewrite the set example from the
 
 It is also possible to extend elementary types in that way::
 
-    pragma solidity ^0.4.16;
+    pragma solidity >=0.4.16 <0.6.0;
 
     library Search {
         function indexOf(uint[] storage self, uint value)

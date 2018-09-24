@@ -327,7 +327,7 @@ New version:
 
 ::
 
-   pragma solidity >=0.4.26;
+   pragma solidity >=0.4.26 <0.6.0;
 
    contract OtherContract {
       uint x;

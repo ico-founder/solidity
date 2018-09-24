@@ -608,7 +608,7 @@ Example that shows how to use internal function types::
 
 Another example that uses external function types::
 
-    pragma solidity ^0.4.22;
+    pragma solidity >=0.4.22 <0.6.0;
 
     contract Oracle {
       struct Request {
@@ -685,7 +685,7 @@ memory-stored reference type do not create a copy.
 
 ::
 
-    pragma solidity ^0.4.0;
+    pragma solidity >=0.4.0 <0.6.0;
 
     contract C {
         uint[] x; // the data location of x is storage
@@ -810,7 +810,7 @@ possible:
 
 ::
 
-    pragma solidity ^0.4.0;
+    pragma solidity >=0.4.0 <0.6.0;
 
     // This will not compile.
     contract C {
@@ -928,7 +928,7 @@ shown in the following example:
 
 ::
 
-    pragma solidity ^0.4.11;
+    pragma solidity >=0.4.11 <0.6.0;
 
     contract CrowdFunding {
         // Defines a new type with two fields.
@@ -1024,7 +1024,7 @@ each ``_KeyType``, recursively. For example with a mapping:
 
 ::
 
-    pragma solidity ^0.4.0;
+    pragma solidity >=0.4.0 <0.6.0;
 
     contract MappingExample {
         mapping(address => uint) public balances;
@@ -1069,7 +1069,7 @@ value it referred to previously.
 
 ::
 
-    pragma solidity ^0.4.0;
+    pragma solidity >=0.4.0 <0.6.0;
 
     contract DeleteExample {
         uint data;

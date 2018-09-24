@@ -20,7 +20,7 @@ For example, suppose we want our contract to
 accept one kind of external calls with two integers, we would write
 something like::
 
-    pragma solidity ^0.4.16;
+    pragma solidity >=0.4.16 <0.6.0;
 
     contract Simple {
         uint sum;
@@ -37,7 +37,7 @@ The output parameters can be declared with the same syntax after the
 the sum and the product of the two given integers, then we would
 write::
 
-    pragma solidity ^0.4.16;
+    pragma solidity >=0.4.16 <0.6.0;
 
     contract Simple {
         function arithmetic(uint _a, uint _b)
@@ -100,7 +100,7 @@ Internal Function Calls
 Functions of the current contract can be called directly ("internally"), also recursively, as seen in
 this nonsensical example::
 
-    pragma solidity ^0.4.16;
+    pragma solidity >=0.4.16 <0.6.0;
 
     contract C {
         function g(uint a) public pure returns (uint ret) { return a + f(); }
@@ -127,7 +127,7 @@ all function arguments have to be copied to memory.
 When calling functions of other contracts, the amount of Wei sent with the call and
 the gas can be specified with special options ``.value()`` and ``.gas()``, respectively::
 
-    pragma solidity ^0.4.0;
+    pragma solidity >=0.4.0 <0.6.0;
 
     contract InfoFeed {
         function info() public payable returns (uint ret) { return 42; }
@@ -174,7 +174,7 @@ parameters from the function declaration, but can be in arbitrary order.
 
 ::
 
-    pragma solidity ^0.4.0;
+    pragma solidity >=0.4.0 <0.6.0;
 
     contract C {
         mapping(uint => uint) data;
@@ -197,7 +197,7 @@ Those parameters will still be present on the stack, but they are inaccessible.
 
 ::
 
-    pragma solidity ^0.4.16;
+    pragma solidity >=0.4.16 <0.6.0;
 
     contract C {
         // omitted name for parameter
