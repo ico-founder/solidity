@@ -774,6 +774,18 @@ Topics allow you to search for events, for example when filtering a sequence of
 blocks for certain events. You can also filter events by the address of the
 contract that emitted the event.
 
+For example, the code below uses the JSON RPC ``eth_getFilterChanges``
+`method <https://github.com/ethereum/wiki/wiki/JSON-RPC#returns-42>`_ to filter
+logs that match a topic with a certain address value:
+
+.. code-block:: json
+
+  {
+    "params": [{
+      "topics":   ["0x000…000c", null, null]
+    }]
+  }
+
 The hash of the signature of the event is one of the topics, except if you
 declared the event with the ``anonymous`` specifier. This means that it is
 not possible to filter for specific anonymous events by name.
@@ -829,16 +841,15 @@ The output of the above looks like the following (trimmed):
 .. code-block:: json
 
   {
-     returnValues: {
-         _from: 0x1111…FFFFCCCC,
-         _id: 0x50…sd5adb20,
-         _value: 0x420042
+     "returnValues": {
+         "_from": "0x1111…FFFFCCCC",
+         "_id": "0x50…sd5adb20",
+         "_value": "0x420042"
      },
-     raw: {
-         data: '0x7f…91385',
-         topics: ['0xfd4…b4ead7', '0x7f…1a91385']
-     },
-     …
+     "raw": {
+         "data": "0x7f…91385",
+         "topics": ["0xfd4…b4ead7", "0x7f…1a91385"]
+     }
   }
 
 .. index:: ! log
@@ -877,6 +888,7 @@ Additional Resources for Understanding Events
 - `Javascript documentation <https://github.com/ethereum/wiki/wiki/JavaScript-API#contract-events>`_
 - `Example usage of events <https://github.com/debris/smart-exchange/blob/master/lib/contracts/SmartExchange.sol>`_
 - `How to access them in js <https://github.com/debris/smart-exchange/blob/master/lib/exchange_transactions.js>`_
+- `How Solidity Events Are Implemented (blog post) <https://blog.qtum.org/how-solidity-events-are-implemented-diving-into-the-ethereum-vm-part-6-30e07b3037b9>`_
 
 .. index:: ! inheritance, ! base class, ! contract;base, ! deriving
 
