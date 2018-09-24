@@ -515,7 +515,7 @@ As an example, the code
 
 ::
 
-    pragma solidity ^=0.4.19 <0.6.0;
+    pragma solidity >=0.4.19 <0.6.0;
     pragma experimental ABIEncoderV2;
 
     contract Test {

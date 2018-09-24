@@ -381,7 +381,7 @@ Local Solidity variables are available for assignments, for example:
 
 .. code::
 
-    pragma solidity >=0.4.11 0.6.0;
+    pragma solidity >=0.4.11 <0.6.0;
 
     contract C {
         uint b;
