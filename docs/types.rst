@@ -455,7 +455,7 @@ subsequent unsigned integer values starting from ``0``.
 
 ::
 
-    pragma solidity ^0.4.16;
+    pragma solidity >=0.4.16 <0.6.0;
 
     contract test {
         enum ActionChoices { GoLeft, GoRight, GoStraight, SitStill }
@@ -547,7 +547,7 @@ just use ``f``, if you want to use its external form, use ``this.f``.
 Additionally, public (or external) functions also have a special member called ``selector``,
 which returns the :ref:`ABI function selector <abi_function_selector>`::
 
-    pragma solidity ^0.4.16;
+    pragma solidity >=0.4.16 <0.6.0;
 
     contract Selector {
       function f() public pure returns (bytes4) {
@@ -557,7 +557,7 @@ which returns the :ref:`ABI function selector <abi_function_selector>`::
 
 Example that shows how to use internal function types::
 
-    pragma solidity ^0.4.16;
+    pragma solidity >=0.4.16 <0.6.0;
 
     library ArrayUtils {
       // internal functions can be used in internal library functions because
@@ -767,7 +767,7 @@ or create a new memory array and copy every element.
 
 ::
 
-    pragma solidity ^0.4.16;
+    pragma solidity >=0.4.16 <0.6.0;
 
     contract C {
         function f(uint len) public pure {
@@ -789,7 +789,7 @@ assigned to a variable right away.
 
 ::
 
-    pragma solidity ^0.4.16;
+    pragma solidity >=0.4.16 <0.6.0;
 
     contract C {
         function f() public pure {
@@ -848,7 +848,7 @@ Members
 
 ::
 
-    pragma solidity ^0.4.16;
+    pragma solidity >=0.4.16 <0.6.0;
 
     contract ArrayContract {
         uint[2**20] m_aLotOfIntegers;
