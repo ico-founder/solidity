@@ -532,7 +532,7 @@ also accepts a payment of zero Ether, so it also is ``non-payable``.
 On the other hand, a ``non-payable`` function will reject Ether sent to it,
 so ``non-payable`` functions cannot be converted to ``payable`` functions.
 
-If a function type variable is not initialized, calling it will result
+If a function type variable is not initialised, calling it will result
 in an exception. The same happens if you call a function after using ``delete``
 on it.
 
@@ -683,9 +683,9 @@ non-persistent area where function arguments are stored, and behaves mostly like
 Data locations are not only relevant for persistency of data, but also for the semantics of assignments:
 assignments between storage and memory (or from calldata) always create an independent copy.
 Assignments from memory to memory only create references. This means that changes to one memory variable
-will also be visible in all other memory variables that refer to the same data.
+are also visible in all other memory variables that refer to the same data.
 Assignments from storage to a local storage variables also only assign a reference.
-In contrast, all other assignments to storage will always copy. Examples for this case
+In contrast, all other assignments to storage always copy. Examples for this case
 are assignments to state variables or to members of local variables of storage struct type, even
 if the local variable itself is just a reference.
 
@@ -725,7 +725,7 @@ Arrays
 ------
 
 Arrays can have a compile-time fixed size or they can be dynamic.
-The are very few restrictions for the element, it can also be
+The are few restrictions for the element, it can also be
 another array, a mapping or a struct. The general restrictions for
 types apply, though, in that mappings can only be used in storage
 and publicly-visible functions need parameters that are ABI types.
@@ -738,7 +738,7 @@ third dynamic array, you use ``x[2][1]`` (indices are zero-based and
 access works in the opposite way of the declaration, i.e. ``x[2]``
 shaves off one level in the type from the right).
 
-Accessing an array past its end will cause a revert. If you want to add
+Accessing an array past its end causes a revert. If you want to add
 new elements, you have to use ``.push()`` or increase the ``.length``
 member (see below).
 
@@ -764,7 +764,7 @@ The numeric index will become a required parameter for the getter.
 Allocating Memory Arrays
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Creating arrays with a runtime-dependent length in memory can be done using the ``new`` keyword.
+You can use the ``new`` keyword to create arrays with a runtime-dependent length in memory.
 As opposed to storage arrays, it is **not** possible to resize memory arrays (e.g. by assigning to
 the ``.length`` member). You either have to calculate the required size in advance
 or create a new memory array and copy every element.
@@ -837,21 +837,21 @@ Members
     Arrays have a ``length`` member that contains their number of elements.
     The length of memory arrays is fixed (but dynamic, i.e. it can depend on runtime parameters) once they are created.
     For dynamically-sized arrays (only available for storage), this member can be assigned to resize the array.
-    Accessing elements outside the current length will not automatically resize the array and instead cause a failing assertion.
-    Increasing the length adds new zero-initialized elements to the array.
+    Accessing elements outside the current length does not automatically resize the array and instead causes a failing assertion.
+    Increasing the length adds new zero-initialised elements to the array.
     Reducing the length performs an implicit :ref:``delete`` on each of the removed elements.
 **push**:
-     Dynamic storage arrays and ``bytes`` (not ``string``) have a member function called ``push`` that can be used to append an element at the end of the array. The element will be zero-initialized. The function returns the new length.
+     Dynamic storage arrays and ``bytes`` (not ``string``) have a member function called ``push`` that you can use to append an element at the end of the array. The element will be zero-initialised. The function returns the new length.
 **pop**:
-     Dynamic storage arrays and ``bytes`` (not ``string``) have a member function called ``pop`` that can be used to remove an element from the end of the array. This will also implicitly call :ref:``delete`` on the removed element.
+     Dynamic storage arrays and ``bytes`` (not ``string``) have a member function called ``pop`` that you can use to remove an element from the end of the array. This also implicitly calls :ref:``delete`` on the removed element.
 
 .. warning::
-    If you use ``.length--`` on an empty array, it will cause an underflow and
+    If you use ``.length--`` on an empty array, it causes an underflow and
     thus sets the length to ``2**256-1``.
 
 .. note::
     Increasing the length of a storage array has constant gas costs because
-    storage is assumed to be zero-initialized, while decreasing
+    storage is assumed to be zero-initialised, while decreasing
     the length has at least linear cost, because it includes explicitly clearing the removed
     elements similar to calling :ref:``delete`` on them.
 
@@ -1046,7 +1046,7 @@ or complex types like contract types, enums, mappings, structs and any array typ
 apart from ``bytes`` and ``string`` are not allowed.
 ``_ValueType`` can be any type, including mappings.
 
-You can think of mappings as `hash tables <https://en.wikipedia.org/wiki/Hash_table>`_, which are virtually initialized
+You can think of mappings as `hash tables <https://en.wikipedia.org/wiki/Hash_table>`_, which are virtually initialised
 such that every possible key exists and is mapped to a value whose
 byte-representation is all zeros, a type's :ref:`default value <default-value>`. The similarity ends there, the key data is not stored in a
 mapping, only its ``keccak256`` hash is used to look up the value.
